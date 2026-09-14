@@ -1,0 +1,9 @@
+const ports = [
+  { id: 'IN-PARADIP', name: 'Paradip', type: 'Major Port', draft: '16.0 m*', bulk: 'Coal · ore · fertilizer', congestion: 'Moderate', score: '92' },
+  { id: 'IN-VIZAG', name: 'Visakhapatnam', type: 'Major Port', draft: 'Varies by berth', bulk: 'Coal · ore · bulk', congestion: 'Elevated', score: '84' },
+  { id: 'IN-KAMARAJAR', name: 'Kamarajar / Ennore', type: 'Major Port', draft: '14.5 m*', bulk: 'Coal · bulk', congestion: 'Low', score: '89' },
+  { id: 'IN-GANGAVARAM', name: 'Gangavaram', type: 'Private / non-major', draft: 'Terminal-specific', bulk: 'Coal · ore · bulk', congestion: 'Low', score: '87' },
+]
+export default function PortIntelligence() {
+  return <div className="page-stack"><div className="page-heading"><div><div className="eyebrow">PORT INTELLIGENCE</div><h1>East Coast gateways</h1><p>Compare port characteristics that influence vessel feasibility, turnaround and procurement risk.</p></div><span className="live-badge"><span className="status-dot" /> Port network</span></div><section className="port-alert"><strong>Gateway conditions matter.</strong> Draft, berth capability, cargo handling and congestion vary by port and terminal, so the selected gateway should be evaluated together with the vessel and cargo.</section><div className="port-table panel"><div className="table-head"><span>Gateway</span><span>Governance</span><span>Draft context</span><span>Dry-bulk fit</span><span>Congestion</span><span>Fit</span></div>{ports.map(p => <div className="table-row" key={p.id}><div><strong>{p.name}</strong><small>{p.id}</small></div><span>{p.type}</span><span>{p.draft}</span><span>{p.bulk}</span><span className={p.congestion === 'Elevated' ? 'warn-text' : 'ok-text'}>{p.congestion}</span><strong className="score">{p.score}</strong></div>)}</div><div className="small-note">Port and berth conditions can be conditional on vessel dimensions, tide, weather, berth availability and operating requirements.</div></div>
+}

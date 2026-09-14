@@ -1,0 +1,176 @@
+{
+  "_comment": "MOCK fleet, calibrated to realistic class-typical DWT/LOA/beam/draft/speed ranges (public naval-architecture reference ranges), per Phase-0 data provenance rules. Not real vessel identities.",
+  "vessels": [
+    {
+      "vessel_id": "V-PMX-014",
+      "name": "Ocean Panamax 14",
+      "vessel_class": "PANAMAX",
+      "dwt_tonnes": 82000,
+      "loa_m": 229.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 14.4,
+      "service_speed_knots": 14.0,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.88
+    },
+    {
+      "vessel_id": "V-PMX-022",
+      "name": "Ocean Panamax 22",
+      "vessel_class": "PANAMAX",
+      "dwt_tonnes": 76000,
+      "loa_m": 225.0,
+      "beam_m": 32.2,
+      "draft_laden_m": 14.2,
+      "service_speed_knots": 13.5,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.55
+    },
+    {
+      "vessel_id": "V-PMX-030",
+      "name": "Ocean Panamax 30",
+      "vessel_class": "PANAMAX",
+      "dwt_tonnes": 80000,
+      "loa_m": 229.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 14.3,
+      "service_speed_knots": 14.0,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.72
+    },
+    {
+      "vessel_id": "V-PMX-045",
+      "name": "Ocean Panamax 45",
+      "vessel_class": "PANAMAX",
+      "dwt_tonnes": 80500,
+      "loa_m": 229.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 14.3,
+      "service_speed_knots": 14.0,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.91
+    },
+    {
+      "vessel_id": "V-SPX-101",
+      "name": "Ocean Supramax 101",
+      "vessel_class": "SUPRAMAX",
+      "dwt_tonnes": 58000,
+      "loa_m": 190.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 12.5,
+      "service_speed_knots": 14.0,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.4
+    },
+    {
+      "vessel_id": "V-SPX-110",
+      "name": "Ocean Supramax 110",
+      "vessel_class": "SUPRAMAX",
+      "dwt_tonnes": 60000,
+      "loa_m": 190.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 12.6,
+      "service_speed_knots": 14.2,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.83
+    },
+    {
+      "vessel_id": "V-CPE-002",
+      "name": "Ocean Capesize 02",
+      "vessel_class": "CAPESIZE",
+      "dwt_tonnes": 180000,
+      "loa_m": 289.0,
+      "beam_m": 45.0,
+      "draft_laden_m": 18.1,
+      "service_speed_knots": 14.5,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.6
+    },
+    {
+      "vessel_id": "V-CPE-005",
+      "name": "Ocean Capesize 05",
+      "vessel_class": "CAPESIZE",
+      "dwt_tonnes": 170000,
+      "loa_m": 289.0,
+      "beam_m": 45.0,
+      "draft_laden_m": 18.0,
+      "service_speed_knots": 14.5,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.35
+    },
+    {
+      "vessel_id": "V-HDY-201",
+      "name": "Ocean Handysize 201",
+      "vessel_class": "HANDYSIZE",
+      "dwt_tonnes": 35000,
+      "loa_m": 180.0,
+      "beam_m": 30.0,
+      "draft_laden_m": 10.2,
+      "service_speed_knots": 13.8,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.77
+    }
+  ],
+  "vessel_availability": [
+    {
+      "vessel_id": "V-PMX-014",
+      "open_date": "2026-08-30",
+      "open_port_id": "SG-SIN",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-PMX-022",
+      "open_date": "2026-08-31",
+      "open_port_id": "AU-HAY",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-PMX-030",
+      "open_date": "2026-10-10",
+      "open_port_id": "SG-SIN",
+      "data_source_type": "MOCK",
+      "_note": "deliberately late open date -> fails avail_ok"
+    },
+    {
+      "vessel_id": "V-PMX-045",
+      "open_date": "2026-08-29",
+      "open_port_id": "IN-PARADIP",
+      "data_source_type": "MOCK",
+      "_note": "already at destination port, must reposition back to origin -> tests a backhaul-style repositioning case"
+    },
+    {
+      "vessel_id": "V-SPX-101",
+      "open_date": "2026-08-31",
+      "open_port_id": "AU-FRE",
+      "data_source_type": "MOCK",
+      "_note": "capacity 58000t < 80000t cargo -> split_candidate case"
+    },
+    {
+      "vessel_id": "V-SPX-110",
+      "open_date": "2026-08-30",
+      "open_port_id": "SG-SIN",
+      "data_source_type": "MOCK",
+      "_note": "capacity 60000t < 80000t cargo -> split_candidate case"
+    },
+    {
+      "vessel_id": "V-CPE-002",
+      "open_date": "2026-08-30",
+      "open_port_id": "AU-HAY",
+      "data_source_type": "MOCK",
+      "_note": "draft 18.1m > Paradip limit 17.0m -> fails draft_ok, matches spec worked example"
+    },
+    {
+      "vessel_id": "V-CPE-005",
+      "open_date": "2026-09-25",
+      "open_port_id": "BR-TUB",
+      "data_source_type": "MOCK",
+      "_note": "far open port + late date -> fails avail_ok and origin_ok"
+    },
+    {
+      "vessel_id": "V-HDY-201",
+      "open_date": "2026-08-30",
+      "open_port_id": "AU-HAY",
+      "data_source_type": "MOCK",
+      "_note": "capacity 35000t < 80000t -> split_candidate case"
+    }
+  ]
+}

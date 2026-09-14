@@ -1,0 +1,65 @@
+{
+  "_comment": "MOCK great-circle-approximate distances (nm), illustrative only, not navigational data.",
+  "distances": [
+    {
+      "from_port_id": "SG-SIN",
+      "to_port_id": "AU-HAY",
+      "distance_nm": 2500
+    },
+    {
+      "from_port_id": "AU-FRE",
+      "to_port_id": "AU-HAY",
+      "distance_nm": 2750
+    },
+    {
+      "from_port_id": "IN-PARADIP",
+      "to_port_id": "AU-HAY",
+      "distance_nm": 4700
+    },
+    {
+      "from_port_id": "BR-TUB",
+      "to_port_id": "AU-HAY",
+      "distance_nm": 11800
+    },
+    {
+      "from_port_id": "AU-HAY",
+      "to_port_id": "AU-HAY",
+      "distance_nm": 0
+    },
+    {
+      "from_port_id": "AU-HAY",
+      "to_port_id": "IN-PARADIP",
+      "distance_nm": 4700
+    },
+    {
+      "from_port_id": "IN-PARADIP",
+      "to_port_id": "IN-PARADIP",
+      "distance_nm": 0
+    },
+    {
+      "from_port_id": "AU-HAY",
+      "to_port_id": "IN-HALDIA",
+      "distance_nm": 5100
+    },
+    {
+      "from_port_id": "AU-HAY",
+      "to_port_id": "IN-VIZAG",
+      "distance_nm": 4550
+    },
+    {
+      "from_port_id": "AU-HAY",
+      "to_port_id": "IN-GANGAVARAM",
+      "distance_nm": 4600
+    },
+    {
+      "from_port_id": "AU-HAY",
+      "to_port_id": "IN-GOPALPUR",
+      "distance_nm": 4650
+    },
+    {
+      "from_port_id": "AU-HAY",
+      "to_port_id": "IN-DHAMRA",
+      "distance_nm": 4750
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+# Delivered Cost Engine (3.4) parameters — MOCK/illustrative until sourced from
+# real charter-party data, per Phase-0 data provenance rules. Every number here
+# is a stated prototype assumption, not a claimed real figure.
+version: "v1"
+
+wait_cost_per_day: 4500        # USD/day, opportunity + carrying cost proxy
+idle_cost_per_day: 3000        # USD/day
+demurrage_rate_per_day: 15000  # USD/day beyond laytime allowance
+despatch_rate_per_day: 7500    # USD/day, ~50% of demurrage — standard charter-party ratio (spec-review issue #10)
+laytime_allowance_days: 4
+
+port_cost_flat:
+  IN-PARADIP: 85000
+  IN-VIZAG: 80000
+  IN-GANGAVARAM: 82000
+  IN-GOPALPUR: 70000
+  IN-DHAMRA: 83000
+  IN-HALDIA: 65000
+  AU-HAY: 60000
+  AU-FRE: 55000
+  SG-SIN: 50000
+  BR-TUB: 60000
+
+# Ballast-leg (deadhead) running cost — duration-based, not distance-flat-rate
+# (spec-review issue #8: a flat $/nm rate ignores vessel speed differences).
+daily_opex_ballast:
+  PANAMAX: 6500
+  SUPRAMAX: 5800
+  CAPESIZE: 8200
+  HANDYSIZE: 4900
+
+bunker_price_usd_per_tonne: 620
+
+bunker_consumption_tonnes_per_day:
+  PANAMAX: 28
+  SUPRAMAX: 24
+  CAPESIZE: 35
+  HANDYSIZE: 18
+
+# Carbon/ETS cost — [Backlog item from competitive-landscape review, Section 5.4:
+# Seven Oceans SOPF calculates EU ETS/FuelEU costs per voyage; ties directly to
+# the SIH "sustainability" evaluation criterion by making it a QUANTIFIED cost
+# line rather than a claimed value]. Disabled by default — MOCK/illustrative
+# carbon price, and the emission factor, while a standard IMO figure, still
+# represents a stated simplification (no differentiation between laden/ballast
+# consumption rates, no distinction between EU-ETS-applicable voyage legs vs.
+# not). Enable explicitly once real carbon-pricing assumptions are sourced.
+carbon_cost_enabled: false
+carbon_price_usd_per_tonne_co2: 80.0   # illustrative EU ETS-ballpark price, MOCK
+co2_emission_factor_tonnes_per_tonne_bunker: 3.114   # standard IMO conversion factor (HFO), not a cost assumption

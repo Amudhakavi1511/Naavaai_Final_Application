@@ -1,0 +1,20 @@
+{
+  "_comment": "Destination port physical limits are REAL-provenance-intended (published port-authority particulars) but populated here with MOCK illustrative figures until sourced, per Phase-0 data provenance rules. Handling rates / base turnaround are MOCK. Paradip's max_draft_m is deliberately set to 17.0m to reproduce the worked example in the Decision Engine spec (Capesize at 18.1m draft is infeasible there).",
+  "ports": [
+    {"port_id":"IN-PARADIP","name":"Paradip","country":"India","max_draft_m":17.0,"max_loa_m":300.0,"max_beam_m":48.0,"berth_count":3,"cargo_handling_rate_tonnes_per_day":22000,"base_turnaround_days":2.5,"data_source_type":"MOCK"},
+    {"port_id":"IN-VIZAG","name":"Visakhapatnam","country":"India","max_draft_m":17.0,"max_loa_m":280.0,"max_beam_m":45.0,"berth_count":2,"cargo_handling_rate_tonnes_per_day":18000,"base_turnaround_days":3.0,"data_source_type":"MOCK"},
+    {"port_id":"IN-GANGAVARAM","name":"Gangavaram","country":"India","max_draft_m":18.5,"max_loa_m":300.0,"max_beam_m":48.0,"berth_count":2,"cargo_handling_rate_tonnes_per_day":20000,"base_turnaround_days":2.8,"data_source_type":"MOCK"},
+    {"port_id":"IN-GOPALPUR","name":"Gopalpur","country":"India","max_draft_m":17.0,"max_loa_m":260.0,"max_beam_m":40.0,"berth_count":1,"cargo_handling_rate_tonnes_per_day":14000,"base_turnaround_days":3.2,"data_source_type":"MOCK"},
+    {"port_id":"IN-DHAMRA","name":"Dhamra","country":"India","max_draft_m":18.0,"max_loa_m":300.0,"max_beam_m":48.0,"berth_count":2,"cargo_handling_rate_tonnes_per_day":21000,"base_turnaround_days":2.6,"data_source_type":"MOCK"},
+    {"port_id":"IN-HALDIA","name":"Haldia","country":"India","max_draft_m":9.0,"max_loa_m":186.0,"max_beam_m":28.0,"berth_count":2,"cargo_handling_rate_tonnes_per_day":9000,"base_turnaround_days":4.0,"data_source_type":"MOCK"},
+    {"port_id":"AU-HAY","name":"Hay Point","country":"Australia","max_draft_m":19.0,"max_loa_m":300.0,"max_beam_m":50.0,"berth_count":3,"cargo_handling_rate_tonnes_per_day":30000,"base_turnaround_days":2.0,"data_source_type":"MOCK"},
+    {"port_id":"AU-FRE","name":"Fremantle","country":"Australia","max_draft_m":14.7,"max_loa_m":250.0,"max_beam_m":40.0,"berth_count":2,"cargo_handling_rate_tonnes_per_day":15000,"base_turnaround_days":2.5,"data_source_type":"MOCK"},
+    {"port_id":"SG-SIN","name":"Singapore","country":"Singapore","max_draft_m":21.0,"max_loa_m":330.0,"max_beam_m":55.0,"berth_count":5,"cargo_handling_rate_tonnes_per_day":25000,"base_turnaround_days":1.5,"data_source_type":"MOCK"},
+    {"port_id":"BR-TUB","name":"Tubarao","country":"Brazil","max_draft_m":21.0,"max_loa_m":330.0,"max_beam_m":55.0,"berth_count":3,"cargo_handling_rate_tonnes_per_day":28000,"base_turnaround_days":2.0,"data_source_type":"MOCK"}
+  ],
+  "congestion_observations": [
+    {"port_id":"IN-PARADIP","observation_timestamp":"2026-08-30","current_congestion_days":1.0,"data_source_type":"MOCK"},
+    {"port_id":"IN-GANGAVARAM","observation_timestamp":"2026-08-30","current_congestion_days":11.5,"data_source_type":"MOCK","_note":"deliberately above the 10-day threshold -> congestion_acceptable fails"},
+    {"port_id":"AU-HAY","observation_timestamp":"2026-08-30","current_congestion_days":0.5,"data_source_type":"MOCK"}
+  ]
+}
