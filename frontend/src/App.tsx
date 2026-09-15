@@ -61,7 +61,19 @@ function DecisionDesk({ cargo, setCargo, onRun, running, error, result, onWhatIf
     {error && <div className="error-banner"><strong>Analysis response</strong><span>{error}</span></div>}
     {!result && !error && <div className="empty-state"><div className="empty-icon">◈</div><strong>Ready for a procurement run</strong><span>Set the cargo requirement and run the Decision Engine to compare feasible chartering strategies.</span><button onClick={onRun}>Run procurement analysis →</button></div>}
     {result && result.status !== 'OPTIMAL' && result.status !== 'TIME_LIMIT_REACHED' && <div className="error-banner"><strong>{result.status.replaceAll('_', ' ')}</strong><span>{STATUS_MESSAGES[result.status] ?? 'No recommendation could be produced for this cargo.'}</span></div>}
-    {result?.explanation && <div className="decision-grid"><div className="main-column"><RecommendationPanel explanation={result.explanation} /><DecisionChart alternatives={result.optimization_result?.ranked_alternatives ?? []} /></div><div><EngineRoom vessels={result.vessel_feasibility?.vessels ?? []} ports={result.port_feasibility?.ports ?? []} candidateSet={result.candidate_set} costMatrixRowCount={result.cost_matrix_summary?.row_count ?? null} /></div></div>}
+    {result?.explanation && (
+      <>
+        <RecommendationPanel explanation={result.explanation} />
+        <div className="analysis-layout">
+          <div className="analysis-main">
+            <DecisionChart alternatives={result.optimization_result?.ranked_alternatives ?? []} />
+          </div>
+          <div className="analysis-side">
+            <EngineRoom vessels={result.vessel_feasibility?.vessels ?? []} ports={result.port_feasibility?.ports ?? []} candidateSet={result.candidate_set} costMatrixRowCount={result.cost_matrix_summary?.row_count ?? null} />
+          </div>
+        </div>
+      </>
+    )}
     {result && <WhatIfPanel onRun={onWhatIf} running={whatIfRunning} result={whatIfResult} />}
   </div>
 }

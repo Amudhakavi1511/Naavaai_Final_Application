@@ -1,8 +1,7 @@
 import type { CargoRequirement, DecisionEngineResponse, WhatIfChanges, WhatIfResponse } from './types'
 import scenarioSet from './demo/scenario_set.json'
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api'
-
+const API_BASE = '/api'
 
 async function post<T>(path: string, body: unknown): Promise<{ ok: true; data: T } | { ok: false; status: number; detail: string }> {
   try {
