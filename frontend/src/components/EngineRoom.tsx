@@ -1,30 +1,76 @@
 import { useState } from 'react'
 import type { CandidateSetSummary, PortCheckResult, VesselCheckResult } from '../types'
+import { portLabel } from '../labels'
 
-interface Props { vessels: VesselCheckResult[]; ports: PortCheckResult[]; candidateSet: CandidateSetSummary | null; costMatrixRowCount: number | null }
-
-export default function EngineRoom({ vessels, ports, candidateSet, costMatrixRowCount }: Props) {
-  const feasibleCount = vessels.filter((v) => v.feasible).length
-  const splitCount = vessels.filter((v) => v.split_candidate).length
-  const rejectedCount = vessels.length - feasibleCount - splitCount
-  const candidateCount = candidateSet ? candidateSet.candidates.filter((c) => !c.is_null).length : 0
-
-  return <div className="border border-hairline bg-panel">
-    <div className="border-b border-hairline px-5 py-3"><div className="panel-kicker">Decision analysis</div><h2 className="text-sm font-semibold mt-1">Feasibility & candidate review</h2></div>
-    <Section title="Vessel feasibility" summary={`${feasibleCount} feasible · ${splitCount} split-ready · ${rejectedCount} rejected`}>
-      <div className="divide-y divide-hairline">{vessels.map((v) => <div key={v.vessel_id} className="flex flex-wrap items-baseline justify-between gap-2 py-1.5 font-data text-xs"><span className={v.feasible ? 'text-sea' : v.split_candidate ? 'text-brass' : 'text-rust'}>{v.feasible ? '✓' : v.split_candidate ? '△' : '✗'} {v.vessel_id} <span className="text-ink-dim">({v.vessel_class})</span></span><span className="text-ink-dim">{v.reason_text ?? (v.split_candidate ? 'split-ready' : 'feasible')}</span></div>)}</div>
-    </Section>
-    <Section title="Port feasibility" summary={`${ports.filter((p) => p.feasible).length}/${ports.length} feasible`}>
-      <div className="divide-y divide-hairline">{ports.map((p) => <div key={p.port_id} className="flex flex-wrap items-baseline justify-between gap-2 py-1.5 font-data text-xs"><span className={p.feasible ? 'text-sea' : 'text-rust'}>{p.feasible ? '✓' : '✗'} {p.port_id}</span><span className="text-ink-dim">{p.feasible ? `turnaround ${p.base_turnaround_days}d + congestion ${p.current_congestion_days}d` : p.reason_text}</span></div>)}</div>
-    </Section>
-    <Section title="Candidate economics" summary={`${candidateCount} candidates · ${costMatrixRowCount ?? 0} scenario rows`} last>
-      <p className="text-xs text-ink-dim">Feasible vessel and strategy combinations are priced across the available market scenarios before risk-adjusted ranking.</p>
-      {candidateSet?.generation_notes.length ? <ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-ink-dim">{candidateSet.generation_notes.map((n, i) => <li key={i}>{n}</li>)}</ul> : null}
-    </Section>
-  </div>
+interface Props {
+  vessels: VesselCheckResult[]
+  ports: PortCheckResult[]
+  candidateSet: CandidateSetSummary | null
+  costMatrixRowCount: number | null
 }
 
-function Section({ title, summary, children, last }: { title: string; summary: string; children: React.ReactNode; last?: boolean }) {
+export default function EngineRoom({ vessels, ports, candidateSet, costMatrixRowCount }: Props) {
+  const feasible = vessels.filter((v) => v.feasible).length
+  const split = vessels.filter((v) => v.split_candidate).length
+  const rejected = vessels.length - feasible - split
+  const candidates = candidateSet ? candidateSet.candidates.filter((c) => !c.is_null).length : 0
+
+  return (
+    <section className="card">
+      <div className="card-head">
+        <div>
+          <h2>Working shown</h2>
+          <p>Every check the engine ran before it ranked anything.</p>
+        </div>
+      </div>
+
+      <Group title="Vessel checks" summary={`${feasible} usable, ${split} split-only, ${rejected} ruled out`}>
+        {vessels.map((v) => (
+          <div className="ev-row" key={v.vessel_id}>
+            <span className={v.feasible ? 'flag flag--ok' : v.split_candidate ? 'flag flag--warn' : 'flag flag--bad'}>
+              {v.feasible ? 'Usable' : v.split_candidate ? 'Split' : 'Ruled out'}
+            </span>
+            <strong>{v.vessel_id}</strong>
+            <span>{v.vessel_class}</span>
+            <em>{v.reason_text ?? (v.split_candidate ? 'Fits only as part of a split cargo.' : 'Clears every physical check.')}</em>
+          </div>
+        ))}
+      </Group>
+
+      <Group title="Port checks" summary={`${ports.filter((p) => p.feasible).length} of ${ports.length} usable`}>
+        {ports.map((p) => (
+          <div className="ev-row" key={p.port_id}>
+            <span className={p.feasible ? 'flag flag--ok' : 'flag flag--bad'}>{p.feasible ? 'Usable' : 'Ruled out'}</span>
+            <strong>{portLabel(p.port_id)}</strong>
+            <span>{p.port_id}</span>
+            <em>
+              {p.feasible
+                ? `Turnaround ${p.base_turnaround_days} days, plus ${p.current_congestion_days} days of congestion.`
+                : p.reason_text}
+            </em>
+          </div>
+        ))}
+      </Group>
+
+      <Group title="Pricing" summary={`${candidates} options priced over ${costMatrixRowCount ?? 0} scenario rows`}>
+        <p>Each surviving vessel-and-strategy combination is priced against every market scenario, then ranked on expected cost and tail risk together.</p>
+        {candidateSet?.generation_notes.length ? (
+          <ul>{candidateSet.generation_notes.map((n, i) => <li key={i}>{n}</li>)}</ul>
+        ) : null}
+      </Group>
+    </section>
+  )
+}
+
+function Group({ title, summary, children }: { title: string; summary: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
-  return <div className={last ? '' : 'border-b border-hairline'}><button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between px-5 py-3 text-left transition-colors hover:bg-panel-raised"><span className="text-sm">{title}</span><span className="font-data text-xs text-ink-dim">{summary} {open ? '▾' : '▸'}</span></button>{open && <div className="px-5 pb-4">{children}</div>}</div>
+  return (
+    <div className="acc-item">
+      <button className="acc-btn" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <strong>{title}</strong>
+        <span>{summary}<i aria-hidden="true">{open ? '−' : '+'}</i></span>
+      </button>
+      {open && <div className="acc-body">{children}</div>}
+    </div>
+  )
 }

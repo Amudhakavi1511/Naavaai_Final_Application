@@ -24,7 +24,9 @@ class WhatIfChanges(BaseModel):
 
 class WhatIfRequest(BaseModel):
     cargo: CargoRequirement
-    scenario_set: ScenarioSet
+    scenario_set: Optional[ScenarioSet] = Field(
+        default=None, description="Optional — see OptimizationRunRequest.scenario_set."
+    )
     changes: WhatIfChanges
 
 

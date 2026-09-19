@@ -1,124 +1,75 @@
 import { useState } from 'react'
 import type { Explanation } from '../types'
-import { usd, riskColor } from '../format'
+import { usd } from '../format'
+import { portLabel } from '../labels'
+
+const RISK_TONE: Record<string, string> = { LOW: 'is-ok', HIGH: 'is-bad' }
 
 export default function RecommendationPanel({ explanation }: { explanation: Explanation }) {
+  const [open, setOpen] = useState(false)
   const d = explanation.decision
-  const [open, setOpen] = useState<string | null>(null)
-  const [showRationale, setShowRationale] = useState(false)
-
-  const primaryVessel = d.legs[0]
-  const cards = [
-    {
-      id: 'cost',
-      label: 'Expected cost',
-      value: usd(d.expected_cost),
-      hint: 'Scenario-weighted procurement cost',
-      tone: 'gold',
-      detail: `Expected delivered cost across the evaluated market scenarios. This includes the selected strategy's applicable freight or hire, port, waiting, deadhead and demurrage/despatch economics.`,
-    },
-    {
-      id: 'risk',
-      label: 'Tail risk · CVaR 80',
-      value: usd(d.cvar_80),
-      hint: d.cvar_status === 'NOT_MEANINGFUL_SAMPLE_SIZE' ? 'Sample size too small for CVaR' : `${d.risk_label} risk profile`,
-      tone: d.risk_label === 'HIGH' ? 'risk-high' : d.risk_label === 'LOW' ? 'risk-low' : 'risk',
-      detail: `CVaR 80 focuses on the expensive tail of the scenario distribution. Current risk preference is ${d.risk_preference.replaceAll('_', ' ').toLowerCase()}.`,
-    },
-    {
-      id: 'strategy',
-      label: 'Recommended strategy',
-      value: d.strategy_label,
-      hint: 'Selected procurement approach',
-      tone: 'sea',
-      detail: `The selected strategy is evaluated against the feasible alternatives before the final risk-aware ranking.`,
-    },
-    {
-      id: 'vessel',
-      label: 'Recommended vessel',
-      value: primaryVessel?.vessel_id ?? 'Multiple vessels',
-      hint: primaryVessel ? `${primaryVessel.vessel_class} · ${d.total_tonnage.toLocaleString()} t` : `${d.total_tonnage.toLocaleString()} t`,
-      tone: 'blue',
-      detail: primaryVessel
-        ? `Selected ${primaryVessel.vessel_id} (${primaryVessel.vessel_class}) for ${primaryVessel.tonnage.toLocaleString()} t under ${primaryVessel.strategy}.`
-        : 'The recommendation uses a multi-vessel allocation.',
-    },
-  ]
 
   return (
-    <section className="recommendation-panel panel">
-      <div className="recommendation-topline">
+    <section className="card rec">
+      <div className="rec-band">
         <div>
-          <div className="panel-kicker">Procurement recommendation</div>
           <h2>{explanation.headline}</h2>
-          <div className="recommendation-route">
-            <span>{d.origin_port_id}</span><span className="route-arrow">→</span><span>{d.destination_port_id}</span>
-            <span className="route-separator">•</span><span>{d.total_tonnage.toLocaleString()} t</span>
-          </div>
+          <p>Ranked first on risk-adjusted delivered cost across every feasible vessel and charter strategy.</p>
         </div>
-        <span className={`decision-badge ${riskColor(d.risk_label)}`}>{d.risk_label} RISK</span>
+        <span className="rec-badge">Recommended</span>
       </div>
 
-      <div className="decision-metric-grid">
-        {cards.map((card) => {
-          const isOpen = open === card.id
-          return (
-            <button
-              key={card.id}
-              type="button"
-              className={`decision-metric-card ${card.tone} ${isOpen ? 'expanded' : ''}`}
-              onClick={() => setOpen(isOpen ? null : card.id)}
-              aria-expanded={isOpen}
-            >
-              <span className="metric-label">{card.label}</span>
-              <strong>{card.value}</strong>
-              <span className="metric-hint">{card.hint}</span>
-              <span className="metric-action">{isOpen ? 'Hide details' : 'View details'} <span>{isOpen ? '↑' : '↓'}</span></span>
-              {isOpen && <span className="metric-detail">{card.detail}</span>}
-            </button>
-          )
-        })}
+      <div className="route">
+        <span><b>{d.total_tonnage.toLocaleString('en-IN')}</b> tonnes</span>
+        <span>{portLabel(d.origin_port_id)} → {portLabel(d.destination_port_id)}</span>
+        <span>Risk stance: {d.risk_label.toLowerCase()}</span>
       </div>
 
-      <button
-        type="button"
-        className={`rationale-toggle ${showRationale ? 'open' : ''}`}
-        onClick={() => setShowRationale(!showRationale)}
-        aria-expanded={showRationale}
-      >
-        <span><span className="rationale-dot" /> Decision rationale</span>
-        <span>{showRationale ? 'Hide explanation ↑' : 'Show explanation ↓'}</span>
-      </button>
+      <div className="stats stats--4">
+        <Stat label="Expected delivered cost" value={usd(d.expected_cost)} />
+        <Stat label="Worst-case average (CVaR 80)" value={usd(d.cvar_80)} tone={RISK_TONE[d.risk_label] ?? 'is-warn'} />
+        <Stat label="Charter strategy" value={d.strategy_label} />
+        <Stat label="Vessels" value={d.legs.map((l) => l.vessel_id).join(', ') || '—'} />
+      </div>
 
-      {showRationale && (
-        <div className="rationale-body">
-          <div className="rationale-columns">
-            <div>
-              <div className="rationale-title">Why this decision</div>
-              <ol>
-                {explanation.reasons.map((r, i) => <li key={i}>{r}</li>)}
-              </ol>
-            </div>
-            <div>
-              <div className="rationale-title">Selected allocation</div>
-              <div className="leg-list">
-                {d.legs.map((leg) => (
-                  <div key={leg.candidate_id} className="leg-row">
-                    <div><strong>{leg.vessel_id}</strong><span>{leg.vessel_class}</span></div>
-                    <div><strong>{leg.tonnage.toLocaleString()} t</strong><span>{leg.strategy} · {leg.charter_epoch}</span></div>
-                  </div>
-                ))}
+      <div className="rec-actions">
+        <button className="btn btn--ghost" onClick={() => setOpen(!open)} aria-expanded={open}>
+          {open ? 'Hide the reasoning' : 'Show the reasoning'}
+        </button>
+      </div>
+
+      {open && (
+        <div className="rec-details">
+          <div>
+            <h3>How the cargo is allocated</h3>
+            {d.legs.map((leg) => (
+              <div className="leg" key={leg.candidate_id}>
+                <strong>{leg.vessel_id}</strong>
+                <span>{leg.vessel_class} · {leg.strategy.toLowerCase().replaceAll('_', ' ')} · laycan {leg.charter_epoch}</span>
+                <b>{leg.tonnage.toLocaleString('en-IN')} t</b>
               </div>
-              {explanation.warnings.length > 0 && (
-                <div className="warning-box">
-                  <strong>Worth reviewing</strong>
-                  {explanation.warnings.map((w, i) => <span key={i}>{w}</span>)}
-                </div>
-              )}
-            </div>
+            ))}
           </div>
+
+          <div>
+            <h3>Why this option won</h3>
+            <ul className="reasons">
+              {explanation.reasons.map((r, i) => <li key={i}>{r}</li>)}
+            </ul>
+          </div>
+
+          {explanation.warnings.length > 0 && (
+            <div className="notice notice--warn">
+              <strong>Check these before you fix the charter</strong>
+              <ul>{explanation.warnings.map((w, i) => <li key={i}>{w}</li>)}</ul>
+            </div>
+          )}
         </div>
       )}
     </section>
   )
+}
+
+function Stat({ label, value, tone }: { label: string; value: string; tone?: string }) {
+  return <div className="stat"><span>{label}</span><strong className={tone}>{value}</strong></div>
 }

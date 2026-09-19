@@ -31,7 +31,14 @@ def _demo_request_body() -> dict:
 def test_health_endpoint():
     resp = client.get("/health")
     assert resp.status_code == 200
-    assert resp.json() == {"status": "ok"}
+    body = resp.json()
+    assert body["status"] == "ok"
+    # Health also reports dataset size, so "up but loaded nothing" is
+    # distinguishable from "up" without a second call.
+    assert body["ports"] > 0
+    assert body["vessels"] > 0
+    assert body["routes"] > 0
+    assert body["scenarios"] > 0
 
 
 # ---------------------------------------------------------------------------
@@ -87,7 +94,10 @@ def test_response_includes_every_upstream_stage_for_transparency():
     in one response, not just the final recommendation."""
     resp = client.post("/optimization/run", json=_demo_request_body())
     body = resp.json()
-    assert len(body["vessel_feasibility"]["vessels"]) == 9  # full fleet, feasible AND infeasible
+    # Full fleet, feasible AND infeasible: the nine fixture vessels plus the
+    # nine in config/fleet_extension.json, which were added so the widened
+    # loading-port network has vessels open in the right basins.
+    assert len(body["vessel_feasibility"]["vessels"]) == 18
     assert len(body["port_feasibility"]["ports"]) == 2
     assert len(body["candidate_set"]["candidates"]) > 100  # incl. null candidate
 
@@ -164,9 +174,16 @@ def test_missing_reference_data_returns_clean_500_not_a_crash():
     which originally crashed with an unhandled 500 traceback for exactly this
     reason] An origin/destination port pair absent from the distance
     reference table must surface as a clean REFERENCE_DATA_INCOMPLETE 500,
-    not an unhandled stack trace leaking through the API."""
+    not an unhandled stack trace leaking through the API.
+
+    [Updated when the port network was widened] IN-VIZAG no longer works as
+    the trigger: the routing-graph generator now derives a distance for it.
+    IN-SANDHEADS is carried deliberately without coordinates or a routing
+    gateway (it is a lighterage anchorage whose particulars are not modelled),
+    so it is the honest remaining case of a port the distance table cannot
+    cover."""
     body = _demo_request_body()
-    body["cargo"]["origin_port_id"] = "IN-VIZAG"  # no IN-VIZAG <-> IN-PARADIP distance in the fixture table
+    body["cargo"]["origin_port_id"] = "IN-SANDHEADS"
     resp = client.post("/optimization/run", json=body)
     assert resp.status_code == 500
     assert "REFERENCE_DATA_INCOMPLETE" in resp.json()["detail"]

@@ -109,3 +109,21 @@ def test_baseline_and_modified_do_not_share_mutated_state():
     plain_resp = client.post("/optimization/run", json={"cargo": _load("cargo_requirement.json"), "scenario_set": _load("mock_forecast_scenario.json")})
     plain_r = plain_resp.json()
     assert r["baseline"]["optimization_result"]["expected_cost"] == plain_r["optimization_result"]["expected_cost"]
+
+
+def test_delta_summary_never_leaks_python_list_syntax():
+    """Regression: build_delta() used to interpolate the winning-vessel list
+    straight into the summary f-string, e.g. "The same decision
+    (['V-PMX-014']) remains optimal" -- Python's repr leaking into
+    user-facing text. Assert the bracket/quote syntax is gone, in both the
+    unchanged-decision and changed-decision phrasings."""
+    unchanged = client.post("/optimization/what-if", json=_base_body({})).json()
+    summary = unchanged["delta"]["summary"]
+    assert "[" not in summary and "']" not in summary and "'," not in summary
+
+    changed = client.post(
+        "/optimization/what-if",
+        json=_base_body({"vessel_availability_shock_days": 30}),
+    ).json()
+    summary = changed["delta"]["summary"]
+    assert "[" not in summary and "']" not in summary and "'," not in summary

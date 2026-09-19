@@ -1,0 +1,169 @@
+{
+  "_comment": "Fleet extension. The original nine-vessel demo fleet in tests/fixtures/mock_vessels.json is left exactly as it was — the test suite asserts against specific vessels in it, and several of those vessels are deliberately constructed to fail a named check. These additional vessels exist so that the widened loading-port network is actually servable: with open positions only around Singapore, Australia and Brazil, almost every non-Australian lane would have returned NO_FEASIBLE_VESSEL on repositioning time alone, which would have been an artefact of a thin fixture fleet rather than a real finding. Particulars are MOCK, in class-typical ranges. Reliability scores are MOCK and never gate feasibility.",
+  "vessels": [
+    {
+      "vessel_id": "V-PMX-050",
+      "name": "Ocean Panamax 50",
+      "vessel_class": "PANAMAX",
+      "dwt_tonnes": 81000,
+      "loa_m": 229.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 14.4,
+      "service_speed_knots": 14.0,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.79
+    },
+    {
+      "vessel_id": "V-PMX-061",
+      "name": "Ocean Panamax 61",
+      "vessel_class": "PANAMAX",
+      "dwt_tonnes": 81000,
+      "loa_m": 225.0,
+      "beam_m": 32.2,
+      "draft_laden_m": 14.2,
+      "service_speed_knots": 13.8,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.66
+    },
+    {
+      "vessel_id": "V-PMX-072",
+      "name": "Ocean Panamax 72",
+      "vessel_class": "PANAMAX",
+      "dwt_tonnes": 82000,
+      "loa_m": 229.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 14.5,
+      "service_speed_knots": 14.2,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.85
+    },
+    {
+      "vessel_id": "V-PMX-083",
+      "name": "Ocean Panamax 83",
+      "vessel_class": "PANAMAX",
+      "dwt_tonnes": 79000,
+      "loa_m": 228.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 14.3,
+      "service_speed_knots": 14.0,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.74
+    },
+    {
+      "vessel_id": "V-PMX-094",
+      "name": "Ocean Panamax 94",
+      "vessel_class": "PANAMAX",
+      "dwt_tonnes": 80000,
+      "loa_m": 229.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 14.4,
+      "service_speed_knots": 14.1,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.69
+    },
+    {
+      "vessel_id": "V-CPE-011",
+      "name": "Ocean Capesize 11",
+      "vessel_class": "CAPESIZE",
+      "dwt_tonnes": 176000,
+      "loa_m": 292.0,
+      "beam_m": 45.0,
+      "draft_laden_m": 18.2,
+      "service_speed_knots": 14.3,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.81
+    },
+    {
+      "vessel_id": "V-SPX-125",
+      "name": "Ocean Supramax 125",
+      "vessel_class": "SUPRAMAX",
+      "dwt_tonnes": 61000,
+      "loa_m": 190.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 12.7,
+      "service_speed_knots": 14.0,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.58
+    },
+    {
+      "vessel_id": "V-SPX-140",
+      "name": "Ocean Supramax 140",
+      "vessel_class": "SUPRAMAX",
+      "dwt_tonnes": 57000,
+      "loa_m": 190.0,
+      "beam_m": 32.3,
+      "draft_laden_m": 12.5,
+      "service_speed_knots": 13.9,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.71
+    },
+    {
+      "vessel_id": "V-HDY-215",
+      "name": "Ocean Handysize 215",
+      "vessel_class": "HANDYSIZE",
+      "dwt_tonnes": 38000,
+      "loa_m": 180.0,
+      "beam_m": 30.0,
+      "draft_laden_m": 10.4,
+      "service_speed_knots": 13.6,
+      "data_source_type": "MOCK",
+      "reliability_score": 0.8
+    }
+  ],
+  "vessel_availability": [
+    {
+      "vessel_id": "V-PMX-050",
+      "open_date": "2026-09-02",
+      "open_port_id": "ZA-RBY",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-PMX-061",
+      "open_date": "2026-08-28",
+      "open_port_id": "US-NOL",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-PMX-072",
+      "open_date": "2026-09-01",
+      "open_port_id": "RU-VNY",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-PMX-083",
+      "open_date": "2026-08-27",
+      "open_port_id": "AE-FJR",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-PMX-094",
+      "open_date": "2026-09-03",
+      "open_port_id": "CA-VAN",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-CPE-011",
+      "open_date": "2026-08-30",
+      "open_port_id": "BR-PDM",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-SPX-125",
+      "open_date": "2026-08-29",
+      "open_port_id": "ID-BJM",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-SPX-140",
+      "open_date": "2026-09-04",
+      "open_port_id": "MZ-BEW",
+      "data_source_type": "MOCK"
+    },
+    {
+      "vessel_id": "V-HDY-215",
+      "open_date": "2026-08-26",
+      "open_port_id": "OM-SOH",
+      "data_source_type": "MOCK"
+    }
+  ]
+}

@@ -7,13 +7,69 @@ a FastAPI backend plus a minimal React demo dashboard:
 **`POST /optimization/run`** — orchestration endpoint with typed statuses,
 **4.1** — deterministic reason-coded Recommendation & Explanation Engine,
 **4.2** — What-If Simulator (`POST /optimization/what-if`, no separate code path),
-**4.3** — minimal React dashboard (`../frontend`).
+**4.3** — Government-of-India-styled React portal (`../frontend`), connected live.
+
+## This session: port network widened, frontend connected to a live backend
+
+The frontend previously carried its own hardcoded loading-port list and posted
+an 800 KB scenario bank back to the server on every request. Both are gone.
+The backend is now the single source of truth for what can be offered:
+
+- **`GET /reference/bootstrap`** (plus `/origins`, `/discharge-ports`,
+  `/commodities`, `/vessels`) — the frontend builds its form entirely from
+  this. `default_cargo` is derived server-side, including dates within the
+  scenario bank's actual forecast horizon, since only the server knows where
+  that horizon sits.
+- **`scenario_set` is now optional** on both `/optimization/run` and
+  `/optimization/what-if`. Omit it and the server uses its own bundled bank
+  (`load_demo_scenario_set()` in `reference_data.py`) — a test
+  (`test_omitting_the_scenario_bank_uses_the_servers_own_and_gives_the_same_answer`)
+  proves omitting it is bit-identical to posting the bundled one.
+- **Loading-port network widened** from 1 country (Australia) to 11 — the
+  countries India actually imports dry bulk from: Australia, Indonesia,
+  United States, Mozambique, South Africa, Canada, Russia, Colombia, Brazil,
+  Oman, UAE. `config/port_network.json` (33 new ports) and
+  `config/fleet_extension.json` (9 vessels, positioned across the relevant
+  basins) layer on top of the original fixtures, which are left untouched —
+  see `app/api/reference_data.py`'s module docstring for the full layering.
+- **`app/api/route_distances.py`** — a waypoint routing graph (Dijkstra over
+  ocean waypoints: Cape, Bab el Mandeb, Suez, Gibraltar, Malacca, Panama, and
+  more) that derives a sailing distance for every port pair the curated table
+  doesn't cover, tagged `DERIVED` vs. the curated `MOCK` entries, with the
+  waypoint chain reported in `route_via` so it's inspectable rather than
+  trusted blindly. Curated distances always win.
+- **`IN-SANDHEADS`** was added deliberately *without* coordinates — a
+  lighterage anchorage in the problem-statement scope whose particulars
+  aren't modelled. It's the new trigger for the "missing reference data"
+  regression test, and a live guard (`test_a_port_without_coordinates_yields_no_derived_distance`)
+  against ever silently guessing a distance for it.
+- **Fleet/port calibration fix**: widening the network initially left every
+  US Atlantic/Gulf and Colombian lane returning `NO_FEASIBLE_STRATEGY`. Not a
+  bug in the engine — `V-PMX-061` (the only vessel positioned anywhere near
+  that basin) was 3,000t short of an 80,000t Panamax cargo, and New Orleans'
+  draft figure (13.7m) sat below every Panamax's laden draft on top of that.
+  Fixed both (`V-PMX-061` → 81,000t; New Orleans → 15.0m, reflecting the
+  real 2022 USACE deepening of the Mississippi River Ship Channel to 50ft).
+  17 of 19 sampled lanes now return `OPTIMAL`; the two that don't (Beira,
+  Mobile) are genuine feasibility limits, locked in by
+  `test_beira_is_correctly_draft_limited_not_a_bug` and a serviceable-lanes
+  regression parametrized test so this can't silently regress again.
+- **Fixed a real bug found while screenshotting the connected app**:
+  `build_delta()`'s what-if summary interpolated a Python list straight into
+  an f-string — `"The same decision (['V-PMX-014']) remains optimal"` — repr
+  syntax leaking into user-facing text. Fixed to join the vessel IDs properly;
+  regression test `test_delta_summary_never_leaks_python_list_syntax`.
+- **CORS tightened**: `FRONTEND_URL` now accepts a comma-separated list (prod
+  + preview origin in one deployment) and credentials are off (no cookies or
+  auth headers cross this boundary — the demo sign-in is browser-local).
+
+138 new/changed tests this session (118 → 156), all passing.
 
 ## Run it
 
 ```bash
 pip install -r requirements.txt
-python -m pytest tests/ -v          # 118/118 tests
+python -m pytest tests/ -v          # 156/156 tests
 uvicorn app.api.main:app --reload   # http://localhost:8000/docs for interactive Swagger UI
 ```
 
@@ -22,7 +78,7 @@ Try it: `POST /optimization/run` with body `{"cargo": <CargoRequirement>, "scena
 for ready-to-use examples (this is exactly what `test_api_orchestration.py` sends).
 Or run the frontend (`../frontend`) for the full interactive demo.
 
-118/118 tests passing at time of writing.
+156/156 tests passing at time of writing.
 
 ## What's here
 
@@ -51,13 +107,18 @@ app/
     mip_model.py                     # 3.5 — split-cargo MIP (OR-Tools MPSolver/CBC), berth-overlap big-M
     solver_runner.py                  # 3.5 — orchestrator: routes enumeration vs. MIP by problem shape
   api/
-    reference_data.py               # STAND-IN for the DB layer — loads the demo fixture as "master data"
-    schemas.py                       # Request/response contracts for the API
-    orchestration.py                  # Implements spec Section 8's exact 3.1->3.6 sequencing
-    main.py                            # FastAPI app: POST /optimization/run, GET /health
+    reference_data.py               # STAND-IN for the DB layer — merges fixtures + widened network + fleet
+    route_distances.py               # Waypoint routing graph — derives distances the curated table lacks
+    reference_routes.py               # GET /reference/bootstrap etc. — what the frontend builds its form from
+    schemas.py                         # Request/response contracts for the API
+    whatif_schemas.py / whatif.py        # 4.2 sensitivity-analysis request/response + delta builder
+    orchestration.py                      # Implements spec Section 8's exact 3.1->3.6 sequencing
+    main.py                                # FastAPI app: POST /optimization/run, GET /health, reference routes
 
 config/
-  cost_parameters.yaml           # Every cost figure, versioned, MOCK/illustrative until sourced
+  cost_parameters.yaml            # Every cost figure, versioned, MOCK/illustrative until sourced
+  port_network.json                # Widened loading-port network — 32 ports across 11 countries
+  fleet_extension.json              # 9 additional vessels, positioned to service the widened network
 
 scripts/
   generate_mock_scenarios.py    # Builds the >=20-scenario Monte Carlo Intelligence
@@ -73,9 +134,9 @@ tests/
   test_optimization_engine.py    # 3.5
   test_api_orchestration.py      # POST /optimization/run — end-to-end integration
   fixtures/
-    mock_vessels.json            # 9-vessel fleet spanning every edge case
-    mock_ports.json              # 10-port network incl. a congestion-fail case
-    mock_distances.json          # Illustrative nm distances
+    mock_vessels.json            # 9-vessel fleet spanning every edge case (frozen — tests assert against it)
+    mock_ports.json              # 10-port network incl. a congestion-fail case (frozen)
+    mock_distances.json          # Curated nm distances (frozen; DERIVED ones layer on top, never overwrite)
     cargo_requirement.json       # SIH demo scenario
     mock_forecast_scenario.json  # 40-scenario Monte Carlo bank (generated, not hand-written)
 ```

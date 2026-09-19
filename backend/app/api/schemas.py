@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.schemas.candidates import CandidateSet
 from app.schemas.common import CargoRequirement, PortFeasibilityResult, ScenarioSet, VesselFeasibilityResult
@@ -12,7 +12,15 @@ from app.schemas.optimization_result import OptimizationResult
 
 class OptimizationRunRequest(BaseModel):
     cargo: CargoRequirement
-    scenario_set: ScenarioSet
+    scenario_set: Optional[ScenarioSet] = Field(
+        default=None,
+        description="Optional. Omit it and the server uses its own bundled demo scenario bank, "
+        "which is what the frontend does — a client has no way to produce or validate a "
+        "scenario set, so making it mandatory only meant shipping ~800 KB of JSON back to the "
+        "server that the server already had. Supply one to drive the engine from an "
+        "externally generated bank (what the Intelligence Layer will do once it exists, and "
+        "what the test suite does today).",
+    )
 
 
 class CostMatrixSummary(BaseModel):

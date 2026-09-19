@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.orchestration import ConfigMissingError, run_decision_engine
+from app.api import reference_routes
 from app.api.reference_data import load_demo_reference_data
 from app.api.schemas import DecisionEngineResponse, OptimizationRunRequest
 from app.api.whatif import WhatIfValidationError, run_what_if
@@ -35,18 +36,24 @@ app = FastAPI(
 #
 # Only the configured frontend origin is allowed to call the API.
 
-FRONTEND_URL = os.getenv(
-    "FRONTEND_URL",
-    "http://localhost:5173",
-)
+# FRONTEND_URL accepts a comma-separated list, so a single deployment can serve
+# a production origin and a preview origin without a code change:
+#   FRONTEND_URL=https://naavaai.vercel.app,http://localhost:5173
+_DEFAULT_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173"
+
+FRONTEND_URL = os.getenv("FRONTEND_URL", _DEFAULT_ORIGINS)
+ALLOWED_ORIGINS = [origin.strip() for origin in FRONTEND_URL.split(",") if origin.strip()]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_URL],
+    allow_origins=ALLOWED_ORIGINS,
     allow_origin_regex=r"https://.*\.vercel\.app",
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    # No cookies or auth headers cross this boundary — the demo sign-in is
+    # browser-local — so credentials stay off. Turning them on would force the
+    # wildcard-origin rules to tighten for no benefit.
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
 )
 
 
@@ -65,7 +72,23 @@ _reference_data = load_demo_reference_data()
 
 @app.get("/health")
 def health() -> dict:
-    return {"status": "ok"}
+    """Liveness probe. Also reports the size of the loaded reference dataset,
+    so a frontend can tell 'the API is up' from 'the API is up but loaded an
+    empty dataset' without a second call."""
+    return {
+        "status": "ok",
+        "ports": len(_reference_data.ports_by_id),
+        "vessels": len(_reference_data.vessels),
+        "routes": len(_reference_data.distances),
+        "scenarios": _reference_data.default_scenario_set.scenario_count,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Reference data (read-only) — what the frontend builds its form from
+# ---------------------------------------------------------------------------
+
+reference_routes.register(app, _reference_data)
 
 
 # ---------------------------------------------------------------------------

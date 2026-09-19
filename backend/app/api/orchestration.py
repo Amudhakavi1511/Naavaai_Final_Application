@@ -39,7 +39,9 @@ class ConfigMissingError(RuntimeError):
 def run_decision_engine(request: OptimizationRunRequest, reference_data: ReferenceData) -> DecisionEngineResponse:
     request_id = str(uuid.uuid4())
     cargo = request.cargo
-    scenario_set = request.scenario_set
+    # A request may omit the scenario bank; the server then uses its own. See
+    # OptimizationRunRequest.scenario_set for why this is optional.
+    scenario_set = request.scenario_set or reference_data.default_scenario_set
 
     # --- 3.1 Vessel Feasibility ---
     vessel_feasibility = run_vessel_feasibility(

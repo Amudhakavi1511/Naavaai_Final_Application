@@ -1,41 +1,96 @@
-import type { CargoRequirement, DecisionEngineResponse, WhatIfChanges, WhatIfResponse } from './types'
-import scenarioSet from './demo/scenario_set.json'
+import type {
+  Bootstrap,
+  CargoRequirement,
+  DecisionEngineResponse,
+  Health,
+  WhatIfChanges,
+  WhatIfResponse,
+} from './types'
 
-const API_BASE = '/api'
+/**
+ * In development the Vite dev server proxies /api to http://localhost:8000
+ * (see vite.config.ts), so the default base URL is correct with no env file.
+ *
+ * In production set VITE_API_BASE_URL to the deployed API origin, e.g.
+ *   VITE_API_BASE_URL=https://naavaai-api.onrender.com
+ * A trailing slash is tolerated.
+ */
+const RAW_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api'
+const API_BASE = RAW_BASE.replace(/\/+$/, '')
 
-async function post<T>(path: string, body: unknown): Promise<{ ok: true; data: T } | { ok: false; status: number; detail: string }> {
+export type Result<T> = { ok: true; data: T } | { ok: false; status: number; detail: string }
+
+const NETWORK_HINT =
+  'Could not reach the decision service. If you are running locally, start the backend with ' +
+  '`uvicorn app.api.main:app --reload` from the backend directory.'
+
+async function request<T>(path: string, init?: RequestInit): Promise<Result<T>> {
   try {
     const resp = await fetch(`${API_BASE}${path}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      ...init,
+      headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
     })
-    const json = await resp.json()
+
+    // A non-JSON body here usually means a proxy or gateway answered instead
+    // of the API, so say that rather than letting a parse error surface.
+    let json: unknown
+    try {
+      json = await resp.json()
+    } catch {
+      return { ok: false, status: resp.status, detail: `The service returned a ${resp.status} response that was not valid JSON.` }
+    }
+
     if (!resp.ok) {
-      return { ok: false, status: resp.status, detail: json.detail ?? 'Unknown error' }
+      const detail = (json as { detail?: string })?.detail ?? `Request failed with status ${resp.status}.`
+      return { ok: false, status: resp.status, detail }
     }
     return { ok: true, data: json as T }
   } catch (e) {
-    return { ok: false, status: 0, detail: e instanceof Error ? e.message : 'Network error — is the backend running on :8000?' }
+    return { ok: false, status: 0, detail: e instanceof Error ? `${NETWORK_HINT} (${e.message})` : NETWORK_HINT }
   }
 }
 
-export function runOptimization(cargo: CargoRequirement) {
-  return post<DecisionEngineResponse>('/optimization/run', { cargo, scenario_set: scenarioSet })
-}
+const post = <T,>(path: string, body: unknown) =>
+  request<T>(path, { method: 'POST', body: JSON.stringify(body) })
 
-export function runWhatIf(cargo: CargoRequirement, changes: WhatIfChanges) {
-  return post<WhatIfResponse>('/optimization/what-if', { cargo, scenario_set: scenarioSet, changes })
-}
+// ---------------------------------------------------------------------------
+// Reference data — the form is built from whatever the engine can service
+// ---------------------------------------------------------------------------
 
-export const demoCargo = (): CargoRequirement => ({
-  cargo_requirement_id: 'CARGO-DEMO-001',
-  commodity: 'coking_coal',
-  quantity_tonnes: 80000,
-  origin_country: 'Australia',
-  origin_port_id: 'AU-HAY',
-  destination_port_id: 'IN-PARADIP',
-  delivery_deadline: '2026-10-15',
-  earliest_departure: '2026-09-01',
-  risk_preference: 'BALANCED',
-})
+export const fetchBootstrap = () => request<Bootstrap>('/reference/bootstrap')
+export const fetchHealth = () => request<Health>('/health')
+
+// ---------------------------------------------------------------------------
+// Decision engine
+// ---------------------------------------------------------------------------
+
+/**
+ * `scenario_set` is deliberately not sent. The server holds the scenario bank
+ * and uses its own when the field is omitted; the frontend used to bundle an
+ * 800 KB copy into the JS bundle and post it back on every request, which was
+ * ~800 KB of data travelling in the wrong direction for something the client
+ * could neither produce nor validate.
+ */
+export const runOptimization = (cargo: CargoRequirement) =>
+  post<DecisionEngineResponse>('/optimization/run', { cargo })
+
+export const runWhatIf = (cargo: CargoRequirement, changes: WhatIfChanges) =>
+  post<WhatIfResponse>('/optimization/what-if', { cargo, changes })
+
+// ---------------------------------------------------------------------------
+// Default requirement
+// ---------------------------------------------------------------------------
+
+/**
+ * The server supplies the default, including the dates. It has to: a voyage
+ * falling outside the scenario bank's forecast horizon fails with
+ * INSUFFICIENT_FORECAST_HORIZON, and only the server knows where that horizon
+ * sits. Guessing here (today + 7 days, say) would open the form on a
+ * requirement that cannot run.
+ */
+export function defaultCargo(bootstrap: Bootstrap): CargoRequirement {
+  return {
+    cargo_requirement_id: `CARGO-${new Date().toISOString().slice(0, 10)}-001`,
+    ...bootstrap.default_cargo,
+  }
+}

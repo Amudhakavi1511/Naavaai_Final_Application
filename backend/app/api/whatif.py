@@ -122,6 +122,9 @@ def build_delta(baseline: DecisionEngineResponse, modified: DecisionEngineRespon
     cost_change_pct = None
     summary_parts = []
 
+    def vessel_list(ids: list[str]) -> str:
+        return ", ".join(ids) if ids else "no vessel"
+
     if baseline.status != modified.status:
         summary_parts.append(f"Status changed from {baseline.status} to {modified.status}.")
     elif baseline.optimization_result and modified.optimization_result:
@@ -131,14 +134,15 @@ def build_delta(baseline: DecisionEngineResponse, modified: DecisionEngineRespon
         cost_change_pct = (cost_change_usd / base_cost * 100) if base_cost else 0.0
         if decision_changed:
             summary_parts.append(
-                f"The recommended vessel(s) changed from {baseline_vessels} to {modified_vessels}; "
-                f"expected cost moved from ${base_cost:,.0f} to ${mod_cost:,.0f} "
-                f"({'+' if cost_change_usd >= 0 else ''}{cost_change_pct:.1f}%)."
+                f"The recommended vessel(s) changed from {vessel_list(baseline_vessels)} to "
+                f"{vessel_list(modified_vessels)}; expected cost moved from ${base_cost:,.0f} to "
+                f"${mod_cost:,.0f} ({'+' if cost_change_usd >= 0 else ''}{cost_change_pct:.1f}%)."
             )
         else:
             summary_parts.append(
-                f"The same decision ({modified_vessels}) remains optimal; expected cost moved from "
-                f"${base_cost:,.0f} to ${mod_cost:,.0f} ({'+' if cost_change_usd >= 0 else ''}{cost_change_pct:.1f}%)."
+                f"The same decision ({vessel_list(modified_vessels)}) remains optimal; expected cost "
+                f"moved from ${base_cost:,.0f} to ${mod_cost:,.0f} "
+                f"({'+' if cost_change_usd >= 0 else ''}{cost_change_pct:.1f}%)."
             )
     else:
         summary_parts.append("No optimization result available for one or both runs to compare costs.")
@@ -156,11 +160,17 @@ def run_what_if(request: WhatIfRequest, base_reference_data: ReferenceData) -> W
     """Module 4.2 entry point. Runs the pipeline twice: baseline (unmodified
     inputs) and modified (per `request.changes`) — both through the exact
     same `run_decision_engine()`."""
-    baseline_request = OptimizationRunRequest(cargo=request.cargo, scenario_set=request.scenario_set)
+    # Resolve the bank once, here, so the baseline and the modified run are
+    # provably shocking the SAME scenarios. Resolving it separately in each
+    # branch would be the kind of subtle mismatch that makes a what-if delta
+    # meaningless without ever throwing an error.
+    scenario_set = request.scenario_set or base_reference_data.default_scenario_set
+
+    baseline_request = OptimizationRunRequest(cargo=request.cargo, scenario_set=scenario_set)
     baseline = run_decision_engine(baseline_request, base_reference_data)
 
     new_cargo, new_scenario_set, new_reference_data = apply_changes(
-        request.cargo, request.scenario_set, base_reference_data, request.changes
+        request.cargo, scenario_set, base_reference_data, request.changes
     )
     modified_request = OptimizationRunRequest(cargo=new_cargo, scenario_set=new_scenario_set)
     modified = run_decision_engine(modified_request, new_reference_data)

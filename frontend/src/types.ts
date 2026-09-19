@@ -1,3 +1,78 @@
+// ---------------------------------------------------------------------------
+// Reference data — served by GET /reference/bootstrap.
+// The frontend deliberately holds no hardcoded copy of the port network: an
+// option that exists in the picker but not in the engine's reference data is
+// a 500 waiting to happen, so the form is built from what the engine can
+// actually service.
+// ---------------------------------------------------------------------------
+
+export interface OriginPort {
+  port_id: string
+  name: string
+  commodities: string | null
+}
+
+export interface OriginCountry {
+  country: string
+  note: string | null
+  ports: OriginPort[]
+}
+
+export interface DischargePort {
+  port_id: string
+  name: string
+  state: string
+  max_draft_m: number
+  berth_count: number
+  cargo_handling_rate_tonnes_per_day: number
+  base_turnaround_days: number
+  current_congestion_days: number
+}
+
+export interface Commodity {
+  id: string
+  label: string
+}
+
+export interface ScenarioBank {
+  scenario_run_id: string
+  forecast_run_id: string
+  scenario_count: number
+  headline_scenarios: string[]
+  /** Dates outside this window have no freight forecast behind them, so the
+   *  date inputs are clamped to it rather than letting the engine reject them. */
+  horizon_start: string
+  horizon_end: string
+}
+
+export interface DefaultCargo {
+  commodity: string
+  quantity_tonnes: number
+  origin_country: string
+  origin_port_id: string
+  destination_port_id: string
+  earliest_departure: string
+  delivery_deadline: string
+  risk_preference: 'LOW' | 'BALANCED' | 'HIGH'
+}
+
+export interface Bootstrap {
+  origins: OriginCountry[]
+  discharge_ports: DischargePort[]
+  commodities: Commodity[]
+  fleet_size: number
+  scenario_bank: ScenarioBank
+  default_cargo: DefaultCargo
+}
+
+export interface Health {
+  status: string
+  ports: number
+  vessels: number
+  routes: number
+  scenarios: number
+}
+
 export interface CargoRequirement {
   cargo_requirement_id: string
   commodity: string

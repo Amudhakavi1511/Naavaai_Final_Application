@@ -1,0 +1,843 @@
+{
+  "_comment": "Loading-port network for the countries India sources dry bulk from. Port particulars (draft/LOA/beam/berths/handling rate/turnaround) are MOCK illustrative figures in the class-typical range for each terminal type, per the Phase-0 data provenance rules — they are NOT published port-authority particulars and must be replaced before any operational use. Coordinates are approximate terminal positions in decimal degrees and are used only to derive sailing distances via app/api/route_distances.py. The `coordinates` block backfills positions onto the ports that already exist in tests/fixtures/mock_ports.json, which is left untouched so the existing test expectations keep holding.",
+  "coordinates": {
+    "IN-PARADIP": [
+      20.27,
+      86.68
+    ],
+    "IN-VIZAG": [
+      17.68,
+      83.28
+    ],
+    "IN-GANGAVARAM": [
+      17.63,
+      83.23
+    ],
+    "IN-GOPALPUR": [
+      19.27,
+      84.92
+    ],
+    "IN-DHAMRA": [
+      20.78,
+      86.98
+    ],
+    "IN-HALDIA": [
+      22.03,
+      88.09
+    ],
+    "AU-HAY": [
+      -21.27,
+      149.31
+    ],
+    "AU-FRE": [
+      -32.05,
+      115.74
+    ],
+    "SG-SIN": [
+      1.26,
+      103.83
+    ],
+    "BR-TUB": [
+      -20.28,
+      -40.24
+    ]
+  },
+  "discharge_ports": [
+    {
+      "port_id": "IN-PARADIP",
+      "state": "Odisha"
+    },
+    {
+      "port_id": "IN-DHAMRA",
+      "state": "Odisha"
+    },
+    {
+      "port_id": "IN-GOPALPUR",
+      "state": "Odisha"
+    },
+    {
+      "port_id": "IN-VIZAG",
+      "state": "Andhra Pradesh"
+    },
+    {
+      "port_id": "IN-GANGAVARAM",
+      "state": "Andhra Pradesh"
+    },
+    {
+      "port_id": "IN-HALDIA",
+      "state": "West Bengal"
+    }
+  ],
+  "origin_overlay": {
+    "AU-HAY": {
+      "origin_country": "Australia",
+      "commodities": "Coking coal"
+    },
+    "BR-TUB": {
+      "origin_country": "Brazil",
+      "commodities": "Iron ore, pellets"
+    }
+  },
+  "ports": [
+    {
+      "port_id": "AU-DBC",
+      "name": "Dalrymple Bay",
+      "country": "Australia",
+      "origin_country": "Australia",
+      "commodities": "Coking coal",
+      "max_draft_m": 18.5,
+      "max_loa_m": 300.0,
+      "max_beam_m": 50.0,
+      "berth_count": 3,
+      "cargo_handling_rate_tonnes_per_day": 32000,
+      "base_turnaround_days": 2.0,
+      "latitude": -21.27,
+      "longitude": 149.32,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AU-GLD",
+      "name": "Gladstone",
+      "country": "Australia",
+      "origin_country": "Australia",
+      "commodities": "Coking and thermal coal",
+      "max_draft_m": 17.5,
+      "max_loa_m": 300.0,
+      "max_beam_m": 48.0,
+      "berth_count": 3,
+      "cargo_handling_rate_tonnes_per_day": 28000,
+      "base_turnaround_days": 2.2,
+      "latitude": -23.84,
+      "longitude": 151.25,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AU-NEW",
+      "name": "Newcastle",
+      "country": "Australia",
+      "origin_country": "Australia",
+      "commodities": "Thermal coal",
+      "max_draft_m": 16.5,
+      "max_loa_m": 300.0,
+      "max_beam_m": 48.0,
+      "berth_count": 4,
+      "cargo_handling_rate_tonnes_per_day": 30000,
+      "base_turnaround_days": 2.0,
+      "latitude": -32.92,
+      "longitude": 151.78,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AU-PHE",
+      "name": "Port Hedland",
+      "country": "Australia",
+      "origin_country": "Australia",
+      "commodities": "Iron ore",
+      "max_draft_m": 19.0,
+      "max_loa_m": 330.0,
+      "max_beam_m": 55.0,
+      "berth_count": 4,
+      "cargo_handling_rate_tonnes_per_day": 40000,
+      "base_turnaround_days": 1.8,
+      "latitude": -20.31,
+      "longitude": 118.58,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ID-TBN",
+      "name": "Taboneo",
+      "country": "Indonesia",
+      "origin_country": "Indonesia",
+      "commodities": "Thermal coal",
+      "max_draft_m": 15.5,
+      "max_loa_m": 290.0,
+      "max_beam_m": 48.0,
+      "berth_count": 3,
+      "cargo_handling_rate_tonnes_per_day": 14000,
+      "base_turnaround_days": 3.5,
+      "latitude": -3.63,
+      "longitude": 114.45,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ID-SMR",
+      "name": "Samarinda",
+      "country": "Indonesia",
+      "origin_country": "Indonesia",
+      "commodities": "Thermal coal",
+      "max_draft_m": 13.0,
+      "max_loa_m": 230.0,
+      "max_beam_m": 36.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 11000,
+      "base_turnaround_days": 4.0,
+      "latitude": -0.5,
+      "longitude": 117.15,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ID-BJM",
+      "name": "Banjarmasin",
+      "country": "Indonesia",
+      "origin_country": "Indonesia",
+      "commodities": "Thermal coal",
+      "max_draft_m": 12.0,
+      "max_loa_m": 220.0,
+      "max_beam_m": 34.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 10000,
+      "base_turnaround_days": 4.2,
+      "latitude": -3.33,
+      "longitude": 114.57,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ID-BPN",
+      "name": "Balikpapan",
+      "country": "Indonesia",
+      "origin_country": "Indonesia",
+      "commodities": "Thermal coal",
+      "max_draft_m": 14.0,
+      "max_loa_m": 250.0,
+      "max_beam_m": 40.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 12000,
+      "base_turnaround_days": 3.6,
+      "latitude": -1.27,
+      "longitude": 116.83,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "US-BAL",
+      "name": "Baltimore",
+      "country": "United States",
+      "origin_country": "United States",
+      "commodities": "Coking coal",
+      "max_draft_m": 15.0,
+      "max_loa_m": 290.0,
+      "max_beam_m": 45.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 22000,
+      "base_turnaround_days": 2.6,
+      "latitude": 39.26,
+      "longitude": -76.58,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "US-NOR",
+      "name": "Norfolk",
+      "country": "United States",
+      "origin_country": "United States",
+      "commodities": "Coking coal",
+      "max_draft_m": 15.8,
+      "max_loa_m": 300.0,
+      "max_beam_m": 48.0,
+      "berth_count": 3,
+      "cargo_handling_rate_tonnes_per_day": 26000,
+      "base_turnaround_days": 2.3,
+      "latitude": 36.87,
+      "longitude": -76.33,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "US-NOL",
+      "name": "New Orleans",
+      "country": "United States",
+      "origin_country": "United States",
+      "commodities": "Coking coal, petroleum coke",
+      "max_draft_m": 15.0,
+      "max_loa_m": 290.0,
+      "max_beam_m": 45.0,
+      "berth_count": 3,
+      "cargo_handling_rate_tonnes_per_day": 20000,
+      "base_turnaround_days": 3.0,
+      "latitude": 29.95,
+      "longitude": -90.07,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "US-MOB",
+      "name": "Mobile",
+      "country": "United States",
+      "origin_country": "United States",
+      "commodities": "Coking coal",
+      "max_draft_m": 13.5,
+      "max_loa_m": 280.0,
+      "max_beam_m": 45.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 18000,
+      "base_turnaround_days": 3.0,
+      "latitude": 30.69,
+      "longitude": -88.04,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "MZ-BEW",
+      "name": "Beira",
+      "country": "Mozambique",
+      "origin_country": "Mozambique",
+      "commodities": "Coking coal",
+      "max_draft_m": 12.0,
+      "max_loa_m": 230.0,
+      "max_beam_m": 36.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 9000,
+      "base_turnaround_days": 4.5,
+      "latitude": -19.83,
+      "longitude": 34.84,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "MZ-NAC",
+      "name": "Nacala",
+      "country": "Mozambique",
+      "origin_country": "Mozambique",
+      "commodities": "Coking coal",
+      "max_draft_m": 15.5,
+      "max_loa_m": 280.0,
+      "max_beam_m": 45.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 12000,
+      "base_turnaround_days": 3.8,
+      "latitude": -14.54,
+      "longitude": 40.68,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "MZ-MPM",
+      "name": "Maputo",
+      "country": "Mozambique",
+      "origin_country": "Mozambique",
+      "commodities": "Coal, chrome, ferro-alloys",
+      "max_draft_m": 14.2,
+      "max_loa_m": 250.0,
+      "max_beam_m": 40.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 13000,
+      "base_turnaround_days": 3.5,
+      "latitude": -25.97,
+      "longitude": 32.57,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ZA-RBY",
+      "name": "Richards Bay",
+      "country": "South Africa",
+      "origin_country": "South Africa",
+      "commodities": "Thermal coal, anthracite",
+      "max_draft_m": 17.5,
+      "max_loa_m": 300.0,
+      "max_beam_m": 48.0,
+      "berth_count": 4,
+      "cargo_handling_rate_tonnes_per_day": 30000,
+      "base_turnaround_days": 2.2,
+      "latitude": -28.8,
+      "longitude": 32.04,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ZA-DUR",
+      "name": "Durban",
+      "country": "South Africa",
+      "origin_country": "South Africa",
+      "commodities": "Coal, manganese ore",
+      "max_draft_m": 12.8,
+      "max_loa_m": 250.0,
+      "max_beam_m": 40.0,
+      "berth_count": 3,
+      "cargo_handling_rate_tonnes_per_day": 14000,
+      "base_turnaround_days": 3.2,
+      "latitude": -29.87,
+      "longitude": 31.03,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ZA-SDB",
+      "name": "Saldanha Bay",
+      "country": "South Africa",
+      "origin_country": "South Africa",
+      "commodities": "Iron ore, manganese ore",
+      "max_draft_m": 21.0,
+      "max_loa_m": 330.0,
+      "max_beam_m": 55.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 35000,
+      "base_turnaround_days": 2.0,
+      "latitude": -33.02,
+      "longitude": 17.95,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "CA-VAN",
+      "name": "Vancouver (Westshore)",
+      "country": "Canada",
+      "origin_country": "Canada",
+      "commodities": "Coking coal",
+      "max_draft_m": 18.0,
+      "max_loa_m": 300.0,
+      "max_beam_m": 50.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 26000,
+      "base_turnaround_days": 2.4,
+      "latitude": 49.29,
+      "longitude": -123.14,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "CA-PRR",
+      "name": "Prince Rupert",
+      "country": "Canada",
+      "origin_country": "Canada",
+      "commodities": "Coking coal",
+      "max_draft_m": 18.5,
+      "max_loa_m": 300.0,
+      "max_beam_m": 50.0,
+      "berth_count": 1,
+      "cargo_handling_rate_tonnes_per_day": 22000,
+      "base_turnaround_days": 2.6,
+      "latitude": 54.32,
+      "longitude": -130.32,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "RU-VNY",
+      "name": "Vostochny",
+      "country": "Russia",
+      "origin_country": "Russia",
+      "commodities": "Coking and thermal coal",
+      "max_draft_m": 16.5,
+      "max_loa_m": 300.0,
+      "max_beam_m": 48.0,
+      "berth_count": 3,
+      "cargo_handling_rate_tonnes_per_day": 24000,
+      "base_turnaround_days": 2.8,
+      "latitude": 42.75,
+      "longitude": 133.07,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "RU-NAK",
+      "name": "Nakhodka",
+      "country": "Russia",
+      "origin_country": "Russia",
+      "commodities": "Coking coal",
+      "max_draft_m": 13.0,
+      "max_loa_m": 240.0,
+      "max_beam_m": 38.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 13000,
+      "base_turnaround_days": 3.6,
+      "latitude": 42.81,
+      "longitude": 132.87,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "RU-UST",
+      "name": "Ust-Luga",
+      "country": "Russia",
+      "origin_country": "Russia",
+      "commodities": "Thermal coal",
+      "max_draft_m": 14.5,
+      "max_loa_m": 270.0,
+      "max_beam_m": 42.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 18000,
+      "base_turnaround_days": 3.0,
+      "latitude": 59.67,
+      "longitude": 28.4,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "CO-PBO",
+      "name": "Puerto Bolivar",
+      "country": "Colombia",
+      "origin_country": "Colombia",
+      "commodities": "Thermal coal",
+      "max_draft_m": 18.5,
+      "max_loa_m": 300.0,
+      "max_beam_m": 50.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 28000,
+      "base_turnaround_days": 2.2,
+      "latitude": 12.23,
+      "longitude": -71.97,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "CO-SMR",
+      "name": "Santa Marta",
+      "country": "Colombia",
+      "origin_country": "Colombia",
+      "commodities": "Thermal coal",
+      "max_draft_m": 15.0,
+      "max_loa_m": 260.0,
+      "max_beam_m": 42.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 16000,
+      "base_turnaround_days": 3.0,
+      "latitude": 11.25,
+      "longitude": -74.22,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "BR-PDM",
+      "name": "Ponta da Madeira",
+      "country": "Brazil",
+      "origin_country": "Brazil",
+      "commodities": "Iron ore",
+      "max_draft_m": 22.0,
+      "max_loa_m": 362.0,
+      "max_beam_m": 65.0,
+      "berth_count": 4,
+      "cargo_handling_rate_tonnes_per_day": 42000,
+      "base_turnaround_days": 1.8,
+      "latitude": -2.57,
+      "longitude": -44.37,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "BR-SEP",
+      "name": "Sepetiba (Guaiba)",
+      "country": "Brazil",
+      "origin_country": "Brazil",
+      "commodities": "Iron ore",
+      "max_draft_m": 20.0,
+      "max_loa_m": 330.0,
+      "max_beam_m": 55.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 30000,
+      "base_turnaround_days": 2.2,
+      "latitude": -22.94,
+      "longitude": -43.82,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "OM-SOH",
+      "name": "Sohar",
+      "country": "Oman",
+      "origin_country": "Oman",
+      "commodities": "Limestone, gypsum",
+      "max_draft_m": 16.0,
+      "max_loa_m": 290.0,
+      "max_beam_m": 48.0,
+      "berth_count": 3,
+      "cargo_handling_rate_tonnes_per_day": 20000,
+      "base_turnaround_days": 2.4,
+      "latitude": 24.5,
+      "longitude": 56.63,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "OM-SLL",
+      "name": "Salalah",
+      "country": "Oman",
+      "origin_country": "Oman",
+      "commodities": "Limestone, gypsum",
+      "max_draft_m": 17.0,
+      "max_loa_m": 300.0,
+      "max_beam_m": 48.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 18000,
+      "base_turnaround_days": 2.5,
+      "latitude": 16.94,
+      "longitude": 54.01,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AE-FJR",
+      "name": "Fujairah",
+      "country": "United Arab Emirates",
+      "origin_country": "United Arab Emirates",
+      "commodities": "Gypsum, aggregates",
+      "max_draft_m": 15.0,
+      "max_loa_m": 280.0,
+      "max_beam_m": 45.0,
+      "berth_count": 3,
+      "cargo_handling_rate_tonnes_per_day": 17000,
+      "base_turnaround_days": 2.5,
+      "latitude": 25.16,
+      "longitude": 56.36,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AE-KHA",
+      "name": "Khor Fakkan",
+      "country": "United Arab Emirates",
+      "origin_country": "United Arab Emirates",
+      "commodities": "Aggregates",
+      "max_draft_m": 15.5,
+      "max_loa_m": 280.0,
+      "max_beam_m": 45.0,
+      "berth_count": 2,
+      "cargo_handling_rate_tonnes_per_day": 15000,
+      "base_turnaround_days": 2.6,
+      "latitude": 25.35,
+      "longitude": 56.36,
+      "data_source_type": "MOCK"
+    },
+    {
+      "_comment": "Sagar / Sandheads is in the problem-statement scope but is a lighterage anchorage rather than a berth terminal, and its particulars and approach distances are not modelled yet. It is deliberately carried WITHOUT coordinates and without a routing gateway, so no distance can be derived for it and any request naming it surfaces a clean REFERENCE_DATA_INCOMPLETE rather than a silently wrong number. tests/test_api_orchestration.py uses it as the regression case for that path.",
+      "port_id": "IN-SANDHEADS",
+      "name": "Sagar / Sandheads",
+      "country": "India",
+      "max_draft_m": 8.0,
+      "max_loa_m": 230.0,
+      "max_beam_m": 36.0,
+      "berth_count": 1,
+      "cargo_handling_rate_tonnes_per_day": 8000,
+      "base_turnaround_days": 5.0,
+      "data_source_type": "MOCK"
+    }
+  ],
+  "origin_metadata": {
+    "Australia": "Largest single source of coking coal for Indian steel mills.",
+    "Indonesia": "Dominant supplier of thermal coal, on short-haul Bay of Bengal voyages.",
+    "United States": "Growing share of Indian coking coal and petroleum coke imports.",
+    "Mozambique": "Tete basin coking coal railed to the Indian Ocean coast.",
+    "South Africa": "Thermal coal and anthracite, with a relatively short Cape-to-India haul.",
+    "Canada": "West-coast coking coal, competitive when Pacific freight is soft.",
+    "Russia": "Far East and Baltic coking coal on rerouted post-2022 flows.",
+    "Colombia": "Atlantic thermal coal, long-haul via Suez or the Cape.",
+    "Brazil": "High-grade iron ore for blast-furnace blending.",
+    "Oman": "Short-haul Arabian Sea limestone and gypsum cargoes.",
+    "United Arab Emirates": "Gypsum and aggregates on very short voyages."
+  },
+  "congestion_observations": [
+    {
+      "port_id": "IN-VIZAG",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 4.2,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "IN-DHAMRA",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 0.8,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "IN-GOPALPUR",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.4,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "IN-HALDIA",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 5.1,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AU-DBC",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.6,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AU-GLD",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.1,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AU-NEW",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 2.9,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AU-PHE",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 0.7,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ID-TBN",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 3.4,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ID-SMR",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 4.0,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ID-BJM",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 3.8,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ID-BPN",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 2.6,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "US-BAL",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.9,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "US-NOR",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.3,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "US-NOL",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 2.4,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "US-MOB",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 2.0,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "MZ-BEW",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 6.5,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "MZ-NAC",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 3.1,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "MZ-MPM",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 2.7,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ZA-RBY",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 5.4,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ZA-DUR",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 4.8,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "ZA-SDB",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.2,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "CA-VAN",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 2.2,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "CA-PRR",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 0.9,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "RU-VNY",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 3.6,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "RU-NAK",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 4.4,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "RU-UST",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 2.1,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "CO-PBO",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.7,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "CO-SMR",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 2.3,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "BR-PDM",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 2.8,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "BR-SEP",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 3.3,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "OM-SOH",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.0,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "OM-SLL",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 0.9,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AE-FJR",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.5,
+      "data_source_type": "MOCK"
+    },
+    {
+      "port_id": "AE-KHA",
+      "observation_timestamp": "2026-08-30",
+      "current_congestion_days": 1.2,
+      "data_source_type": "MOCK"
+    }
+  ],
+  "commodities": [
+    {
+      "id": "coking_coal",
+      "label": "Coking coal"
+    },
+    {
+      "id": "thermal_coal",
+      "label": "Thermal coal"
+    },
+    {
+      "id": "iron_ore",
+      "label": "Iron ore"
+    },
+    {
+      "id": "limestone",
+      "label": "Limestone"
+    },
+    {
+      "id": "manganese_ore",
+      "label": "Manganese ore"
+    },
+    {
+      "id": "petcoke",
+      "label": "Petroleum coke"
+    }
+  ]
+}

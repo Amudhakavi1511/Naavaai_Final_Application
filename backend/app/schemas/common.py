@@ -100,6 +100,22 @@ class Port(BaseModel):
     cargo_handling_rate_tonnes_per_day: float = Field(gt=0)
     base_turnaround_days: float = Field(gt=0, description="Inherent handling/berthing time, EXCLUDING congestion")
     data_source_type: DataSourceType = DataSourceType.MOCK
+    latitude: Optional[float] = Field(
+        default=None, ge=-90.0, le=90.0,
+        description="Decimal degrees. Used only by the routing-graph distance generator "
+        "(app/api/route_distances.py) to derive distances for port pairs the curated "
+        "reference table doesn't cover. None means this port can only be reached via a "
+        "curated distance entry.",
+    )
+    longitude: Optional[float] = Field(default=None, ge=-180.0, le=180.0, description="Decimal degrees.")
+    origin_country: Optional[str] = Field(
+        default=None,
+        description="Country label used to group this port in the loading-port picker. "
+        "None for discharge ports and for ports that are only vessel open positions.",
+    )
+    commodities: Optional[str] = Field(
+        default=None, description="Dry-bulk commodities this port loads, for display in the origin picker.",
+    )
 
 
 class CongestionObservation(BaseModel):
@@ -116,6 +132,16 @@ class RouteDistance(BaseModel):
     from_port_id: str
     to_port_id: str
     distance_nm: float = Field(ge=0, description="0 is valid — vessel already at this port")
+    data_source_type: DataSourceType = Field(
+        default=DataSourceType.MOCK,
+        description="MOCK for the curated reference entries; DERIVED for distances computed "
+        "by the routing-graph generator. Neither is navigational data.",
+    )
+    route_via: Optional[str] = Field(
+        default=None,
+        description="For DERIVED entries, the waypoint chain the distance was measured along "
+        "(e.g. 'WP-TORRES > WP-LOMBOK > WP-DONDRA'). None for curated entries.",
+    )
 
 
 # ---------------------------------------------------------------------------
