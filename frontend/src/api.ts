@@ -12,10 +12,12 @@ import type {
  * (see vite.config.ts), so the default base URL is correct with no env file.
  *
  * In production set VITE_API_BASE_URL to the deployed API origin, e.g.
- *   VITE_API_BASE_URL=https://naavaai-api.onrender.com
+ *   VITE_API_BASE_URL=https://naavaai-backend.onrender.com
  * A trailing slash is tolerated.
  */
-const RAW_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api'
+const RAW_BASE = import.meta.env.VITE_API_BASE_URL
+  ?? (import.meta.env.DEV ? '/api' : 'https://naavaai-backend.onrender.com')
+
 const API_BASE = RAW_BASE.replace(/\/+$/, '')
 
 export type Result<T> = { ok: true; data: T } | { ok: false; status: number; detail: string }
